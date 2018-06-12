@@ -25,7 +25,7 @@ class SubmissionStartPage extends React.Component {
 
 
     render() {
-        const {isFetchingProcessDefinition, processDefinition, submissionToWorkflowSuccessful, submittingToWorkflow} = this.props;
+        const {isFetchingProcessDefinition, processDefinition, submittingToWorkflow} = this.props;
         return <div className="grid-row">
             {submittingToWorkflow ?
                 <div style={{display: 'flex', justifyContent: 'center', paddingTop: '20px'}}><Spinner
@@ -36,12 +36,12 @@ class SubmissionStartPage extends React.Component {
                     {isFetchingProcessDefinition ? <div>Loading form...</div> : <div>
                         {processDefinition ? <div>
                             <legend>
-                                <h3 className="heading-medium">{processDefinition.getIn(['process-definition', 'name'])}</h3>
+                                <h3 className="heading-medium">{processDefinition.get('name')}</h3>
                             </legend>
 
                             <StartForm formName={processDefinition.get('formKey')}
-                                       processKey={processDefinition.getIn(['process-definition', 'key'])}
-                                       processName={processDefinition.getIn(['process-definition', 'name'])}
+                                       processKey={processDefinition.get('key')}
+                                       processName={processDefinition.get('name')}
                                        {...this.props}/>
                         </div> : <div>
                             No process definition found

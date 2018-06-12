@@ -15,7 +15,7 @@ function reducer(state = initialState, action) {
         case actions.FETCH_PROCESS_DEFINITIONS:
             return state.set('isFetchingProcessDefinitions', true)
         case actions.FETCH_PROCESS_DEFINITIONS_SUCCESS:
-            const data = action.payload.entity._embedded ? action.payload.entity._embedded['process-definitions'] : [];
+            const data = action.payload.entity ? action.payload.entity : [];
             return state.set('isFetchingProcessDefinitions', false)
                 .set('processDefinitions', Immutable.fromJS(data));
         case actions.FETCH_PROCESS_DEFINITIONS_FAILURE:
