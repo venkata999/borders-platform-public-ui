@@ -31,7 +31,8 @@ function reducer(state = initialState, action) {
                 .set('isFetchingProcessDefinition', true)
                 .set('fetchingFailed', false);
         case actions.FETCH_PROCESS_DEFINITION_SUCCESS:
-            const processDefinition = action.payload.entity ? action.payload.entity : {};
+            const processDefinition = action.payload.definition ? action.payload.definition : {};
+            processDefinition.formKey = action.payload.formKey;
             return state.set('isFetchingProcessDefinition', false)
                 .set('processDefinition', Immutable.fromJS(processDefinition));
         case actions.FETCH_PROCESS_DEFINITION_FAILURE:

@@ -15,7 +15,7 @@ const fetchProcessDefinitions = (action$, store) =>
                 }
             }).map(payload => actions.fetchProcessDefinitionsSuccess(payload))
                 .catch(error => {
-                    return errorObservable(actions.fetchProcessDefinitionsFailure(), error);
+                        return errorObservable(actions.fetchProcessDefinitionsFailure(), error);
                     }
                 );
         });
@@ -30,10 +30,35 @@ const fetchProcessDefinition = (action$, store) =>
                 headers: {
                     "Accept": "application/json"
                 }
-            }).map(payload => actions.fetchProcessDefinitionSuccess(payload))
-                .catch(error => {
-                        return errorObservable(actions.fetchProcessDefinitionFailure(), error);
-                    }
-                ));
+            }).map(payload => {
+                return {
+                    type: types.FETCH_PROCESS_DEFINITION_FORM,
+                    definition: payload,
+                    processKey: action.processKey
+                }
+            }).catch(error => {
+                    return errorObservable(actions.fetchProcessDefinitionFailure(), error);
+                }
+            ));
 
-export default combineEpics(fetchProcessDefinitions, fetchProcessDefinition);
+const fetchDefinitionForm = (action$, store) =>
+    action$.ofType(types.FETCH_PROCESS_DEFINITION_FORM)
+        .mergeMap(action =>
+            client({
+                method: 'GET',
+                path: `/api/workflow/process-definition/key/${action.processKey}/startForm`,
+                headers: {
+                    "Accept": "application/json",
+                    'Content-Type': 'application/json'
+                }
+            }).map(payload => {
+                return actions.fetchProcessDefinitionSuccess({
+                    definition: action.definition.entity,
+                    formKey: payload.entity.key
+                })
+            }).catch(error => {
+                return errorObservable(actions.fetchProcessDefinitionFailure(), error)
+            })
+        );
+
+export default combineEpics(fetchProcessDefinitions, fetchProcessDefinition, fetchDefinitionForm);

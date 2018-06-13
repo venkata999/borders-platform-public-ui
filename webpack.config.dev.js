@@ -60,6 +60,11 @@ module.exports = webpackMerge(commonConfig, {
                 target: translationServiceUrl,
                 changeOrigin: true
             },
+            "/api/form": {
+                target: formIOUrl,
+                secure: false,
+                changeOrigin: true
+            }
 
         }
     }
