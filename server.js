@@ -38,8 +38,8 @@ console.log("workflowUrl " + workflowUrl);
 console.log("translationServiceUrl " + translationServiceUrl);
 
 const basicAuthentication = () => {
-    const username= process.env.EXTERNAL_TASK_CALLER_USERNAME;
-    const password = process.env.EXTERNAL_TASK_CALLER_PASSWORD;
+    const username= process.env.USERNAME;
+    const password = process.env.PASSWORD;
     return "Basic " + btoa(username + ":" + password);
 };
 

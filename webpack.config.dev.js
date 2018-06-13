@@ -16,8 +16,8 @@ console.log("formIOUrl " + formIOUrl);
 console.log("translationServiceUrl " + translationServiceUrl);
 
 const basicAuthentication = () => {
-    const username = process.env.EXTERNAL_TASK_CALLER_USERNAME;
-    const password = process.env.EXTERNAL_TASK_CALLER_PASSWORD;
+    const username = process.env.USERNAME;
+    const password = process.env.PASSWORD;
     const tok = username + ':' + password;
     const hash = Base64.encode(tok);
     return "Basic " + hash;
