@@ -1,1 +1,1 @@
-export const NAME = 'process-definitions-page';
+export const NAME = 'submissions-page';

@@ -15,6 +15,13 @@ console.log("workflowUrl " + workflowUrl);
 console.log("formIOUrl " + formIOUrl);
 console.log("translationServiceUrl " + translationServiceUrl);
 
+const basicAuthentication = () => {
+    const username = process.env.EXTERNAL_TASK_CALLER_USERNAME;
+    const password = process.env.EXTERNAL_TASK_CALLER_PASSWORD;
+    const tok = username + ':' + password;
+    const hash = Base64.encode(tok);
+    return "Basic " + hash;
+};
 
 module.exports = webpackMerge(commonConfig, {
     devtool: 'eval',
@@ -41,10 +48,12 @@ module.exports = webpackMerge(commonConfig, {
             "/api/workflow": {
                 target: workflowUrl,
                 pathRewrite: {
-                    '^/api/workflow' : '/rest/engine/default'
+                    '^/api/workflow': '/rest/engine/borders'
                 },
                 changeOrigin: true,
                 onProxyReq: function onProxyReq(proxyReq, req, res) {
+                    const authHeader = basicAuthentication();
+                    proxyReq.setHeader('Authorization',  authHeader);
                     console.log('Workflow Proxy -->  ', req.method, req.path, '-->', `${workflowUrl}${proxyReq.path}`);
                 },
             },

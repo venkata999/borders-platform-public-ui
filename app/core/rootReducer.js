@@ -1,12 +1,14 @@
 import {combineReducers} from 'redux';
 import {loadingBarReducer} from 'react-redux-loading-bar';
-import processDefinitions from '../pages/submissions/index';
+import submissionsPage from '../pages/submissions/index';
 import error from '../core/error/index';
 import {routerReducer} from 'react-router-redux'
 import {combineEpics} from 'redux-observable';
+import form from './start-forms/index';
 
 export const rootEpic = combineEpics(
-    processDefinitions.epic,
+    submissionsPage.epic,
+    form.epic
 
 );
 
@@ -14,6 +16,7 @@ export const rootEpic = combineEpics(
 export const rootReducer = combineReducers({
     loadingBar: loadingBarReducer,
     routing: routerReducer,
-    [processDefinitions.constants.NAME]: processDefinitions.reducer,
+    [submissionsPage.constants.NAME]: submissionsPage.reducer,
     [error.constants.NAME]: error.reducer,
+    [form.constants.NAME]: form.reducer,
 });

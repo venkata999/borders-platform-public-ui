@@ -13,8 +13,7 @@ const fetchForm = (action$, store) =>
                 method: 'GET',
                 path: `/api/translation/form/${action.formName}`,
                 headers: {
-                    "Accept": "application/json",
-                    "Authorization": `Bearer ${store.getState().keycloak.token}`
+                    "Accept": "application/json"
                 }
             }).map(payload => actions.fetchFormSuccess(payload))
                 .catch(error => {
@@ -34,8 +33,7 @@ const fetchFormWithContext = (action$, store) =>
                 },
                 headers: {
                     'Content-Type': 'application/json',
-                    "Accept": "application/json",
-                    "Authorization": `Bearer ${store.getState().keycloak.token}`
+                    "Accept": "application/json"
                 }
             }).map(payload => actions.fetchFormSuccess(payload))
                 .catch(error => {
@@ -54,7 +52,6 @@ const submit = (action$, store) =>
                 },
                 headers: {
                     "Accept": "application/json",
-                    "Authorization": `Bearer ${store.getState().keycloak.token}`,
                     'Content-Type': 'application/json'
                 }
             }).take(1).map(payload => {
@@ -83,7 +80,6 @@ const submitToWorkflow = (action$, store) =>
                 },
                 headers: {
                     "Accept": "application/json",
-                    "Authorization": `Bearer ${store.getState().keycloak.token}`,
                     'Content-Type': 'application/json'
                 }
             }).map(payload => {

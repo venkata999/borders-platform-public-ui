@@ -37,13 +37,22 @@ const translationServiceUrl = `https://${translationServiceName}.${intdomain}`;
 console.log("workflowUrl " + workflowUrl);
 console.log("translationServiceUrl " + translationServiceUrl);
 
+const basicAuthentication = () => {
+    const username= process.env.EXTERNAL_TASK_CALLER_USERNAME;
+    const password = process.env.EXTERNAL_TASK_CALLER_PASSWORD;
+    const tok = username + ':' + password;
+    const hash = Base64.encode(tok);
+    return "Basic " + hash;
+};
+
 app.use('/api/workflow', proxy({
     target: workflowUrl,
     pathRewrite: {
-        '^/api/workflow' : '/rest/engine/default'
+        '^/api/workflow': '/rest/engine/borders'
     },
     onProxyReq: function onProxyReq(proxyReq, req, res) {
-
+        const authHeader = basicAuthentication();
+        proxyReq.setHeader('Authorization',  authHeader);
         console.log('Workflow Proxy -->  ', req.method, req.path, '-->', workflowUrl, proxyReq.path);
     },
     onError: function onError(err, req, res) {
@@ -61,7 +70,9 @@ app.use('/api/translation', proxy(
     {
         target: translationServiceUrl,
         onProxyReq: function onProxyReq(proxyReq, req, res) {
-            console.log('Translation Service Proxy -->  ', req.method, req.path, '-->', formIOUrl, proxyReq.path);
+            const authHeader = basicAuthentication();
+            proxyReq.setHeader('Authorization',  authHeader);
+            console.log('Translation Service Proxy -->  ', req.method, req.path, '-->', translationServiceUrl, proxyReq.path);
         },
         onError: function onError(err, req, res) {
             console.error(err);

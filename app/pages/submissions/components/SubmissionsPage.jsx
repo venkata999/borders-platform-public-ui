@@ -18,12 +18,11 @@ class ProceduresPage extends React.Component {
     }
 
     process = (process) => {
-        this.props.history.replace("/procedure-start?processKey=" + process.getIn(["process-definition", "key"]));
+        this.props.history.replace("/submission-start?processKey=" + process.get("key"));
     };
 
     render() {
         const {isFetchingProcessDefinitions, processDefinitions} = this.props;
-        alert("isFetchingProcessDefinitions " + isFetchingProcessDefinitions);
         const pointerStyle = {cursor: 'pointer'};
         return <div>
 
@@ -38,9 +37,9 @@ class ProceduresPage extends React.Component {
                     <tbody>
                     {
                         processDefinitions.map(p => {
-                            return <tr key={p.getIn(['process-definition', 'key'])} style={pointerStyle} onClick={() => this.process(p)}>
-                                    <td>{p.getIn(['process-definition', 'name'])}</td>
-                                    <td>{p.getIn(['process-definition', 'description'])}</td>
+                            return <tr key={p.get('key')} style={pointerStyle} onClick={() => this.process(p)}>
+                                    <td>{p.get('name')}</td>
+                                    <td>{p.get('description')}</td>
                                  </tr>
                         })
                     }
