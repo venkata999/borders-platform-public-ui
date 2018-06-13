@@ -4,6 +4,7 @@ const webpackMerge = require('webpack-merge');
 
 const port = process.env.PORT || 8080;
 
+const btoa = require('btoa');
 
 const platformDataUrl = process.env.PLATFORM_DATA_URL;
 const workflowUrl = process.env.WORKFLOW_URL;
@@ -16,11 +17,9 @@ console.log("formIOUrl " + formIOUrl);
 console.log("translationServiceUrl " + translationServiceUrl);
 
 const basicAuthentication = () => {
-    const username = process.env.USERNAME;
+    const username= process.env.USERNAME;
     const password = process.env.PASSWORD;
-    const tok = username + ':' + password;
-    const hash = Base64.encode(tok);
-    return "Basic " + hash;
+    return "Basic " + btoa(username + ":" + password);
 };
 
 module.exports = webpackMerge(commonConfig, {

@@ -7,6 +7,24 @@ const path = require('path');
 const proxy = require('http-proxy-middleware');
 const cors = require('cors');
 const btoa = require('btoa');
+const https = require('https');
+
+const fs = require('fs');
+
+if (process.env.NODE_ENV === 'production') {
+    console.log('Setting ca bundle');
+    const trustedCa = [
+        '/etc/ssl/certs/ca-bundle.crt'
+    ];
+
+    https.globalAgent.options.ca = [];
+    http.globalAgent.options.ca = [];
+    for (const ca of trustedCa) {
+        https.globalAgent.options.ca.push(fs.readFileSync(ca));
+        http.globalAgent.options.ca.push(fs.readFileSync(ca));
+    }
+    console.log('ca bundle set...');
+}
 
 const respond = (req, res) => {
     res.send('OK');
@@ -60,7 +78,9 @@ app.use('/api/workflow', proxy({
     },
     logLevel: 'debug',
     changeOrigin: true,
-    secure: false
+    secure: true,
+    agent: https.globalAgent,
+
 }));
 
 
@@ -79,10 +99,31 @@ app.use('/api/translation', proxy(
         },
         logLevel: 'debug',
         changeOrigin: true,
-        secure: false
+        secure: true,
+        agent: https.globalAgent
     }
 ));
 
+app.use('/api/form', proxy(
+    {
+        target: formIOUrl,
+        pathRewrite: {
+            '^/api/form': '/form'
+        },
+        agent: https.globalAgent,
+        onProxyReq: function onProxyReq(proxyReq, req, res) {
+            console.log('Form IO Proxy -->  ', req.method, req.path, '-->', formIOUrl, proxyReq.path);
+        },
+        onError: function onError(err, req, res) {
+            console.error(err);
+            res.status(500);
+            res.json({error: 'Error when connecting to remote server.'});
+        },
+        logLevel: 'debug',
+        changeOrigin: true,
+        secure: true
+    }
+));
 
 app.all('*', function (req, res) {
     console.log("Request to public UI");
