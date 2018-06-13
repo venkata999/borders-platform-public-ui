@@ -5,8 +5,8 @@ const http = require('http');
 const app = express();
 const path = require('path');
 const proxy = require('http-proxy-middleware');
-const cors = require('cors')
-
+const cors = require('cors');
+const btoa = require('btoa');
 
 const respond = (req, res) => {
     res.send('OK');
@@ -40,9 +40,7 @@ console.log("translationServiceUrl " + translationServiceUrl);
 const basicAuthentication = () => {
     const username= process.env.EXTERNAL_TASK_CALLER_USERNAME;
     const password = process.env.EXTERNAL_TASK_CALLER_PASSWORD;
-    const tok = username + ':' + password;
-    const hash = Base64.encode(tok);
-    return "Basic " + hash;
+    return "Basic " + btoa(username + ":" + password);
 };
 
 app.use('/api/workflow', proxy({
