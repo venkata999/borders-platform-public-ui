@@ -4,6 +4,7 @@ import HomePage from '../pages/home/components/HomePage';
 import ErrorHandlingComponent from "./error/component/ErrorHandlingComponent";
 import SubmissionsPage from "../pages/submissions/components/SubmissionsPage";
 import SubmissionStartPage from "../pages/submissions/components/SubmissionStartPage";
+import SafeApp from "../pages/internal/safeapp/components/SafeApp";
 
 const Main = () => (
     <main>
@@ -19,6 +20,10 @@ const Main = () => (
             <Route name="Procedures" exact path='/submissions' render={() => {
                 return <ErrorHandlingComponent><SubmissionsPage/></ErrorHandlingComponent>
             }}/>
+            <Route name="Safe App" exact path='/internal/safeapp' render={() => {
+                return <ErrorHandlingComponent><SafeApp/></ErrorHandlingComponent>
+            }}/>
+
             <Redirect to="/home"/>
         </Switch>
     </main>

@@ -68,28 +68,6 @@ class Header extends React.Component {
                             </a>
                         </div>
                     </div>
-                    <div className="header-proposition">
-                        <div className="content">
-                            <div className="grid-row">
-                                <div className="column-one-half">
-                                    <a href="#" id="proposition-name">Submission Activities</a>
-                                </div>
-                            </div>
-                            <ResponsiveMenu
-                                menuOpenButton={<div className="nav-menu">Open</div>}
-                                menuCloseButton={<div className="nav-menu">Close</div>}
-                                changeMenuOn="500px"
-                                smallMenuClassName="small-menu"
-                                menu={
-                                    <ul id="proposition-links" style={{width: navWidth}}>
-                                        <li style={pointerStyle}><a onClick={() => this.changeRoute('/submissions')}
-                                                                    className={isProcess(routerPath) ? 'active' : ''}>Submissions</a>
-                                        </li>
-                                    </ul>
-                                }
-                            />
-                        </div>
-                    </div>
 
                 </div>
             </header>

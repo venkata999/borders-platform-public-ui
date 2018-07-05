@@ -69,29 +69,31 @@ const submit = (action$, store) =>
 
 const submitToWorkflow = (action$, store) =>
     action$.ofType(types.SUBMIT_TO_WORKFLOW)
-        .mergeMap(action =>
-            client({
-                method: 'POST',
-                path: `/api/workflow/process-instances`,
-                entity: {
-                    "data": action.data,
-                    "processKey": action.processKey,
-                    "variableName": action.variableName
-                },
-                headers: {
-                    "Accept": "application/json",
-                    'Content-Type': 'application/json'
-                }
-            }).map(payload => {
-                console.log(JSON.stringify(action));
-                PubSub.publish("submission", {
-                    submission: true,
-                    message: `${action.processName} successfully started`
-                });
-                return actions.submitToWorkflowSuccess(payload)
-            }).catch(error => {
-                return errorObservable(actions.submitToWorkflowFailure(), error)
-            })
+        .mergeMap(action => {
+                const variableName = action.variableName;
+                const variables = {};
+                variables[variableName] = { value : JSON.stringify(action.data), type:'json', valueInfo:{}};
+                return client({
+                    method: 'POST',
+                    path: `/api/workflow/process-definition/key/${action.processKey}/start`,
+                    entity: {
+                        variables
+                    },
+                    headers: {
+                        "Accept": "application/json",
+                        'Content-Type': 'application/json'
+                    }
+                }).map(payload => {
+                    console.log(JSON.stringify(action));
+                    PubSub.publish("submission", {
+                        submission: true,
+                        message: `${action.processName} successfully started`
+                    });
+                    return actions.submitToWorkflowSuccess(payload)
+                }).catch(error => {
+                    return errorObservable(actions.submitToWorkflowFailure(), error)
+                })
+            }
         );
 
 

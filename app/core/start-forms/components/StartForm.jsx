@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react'
 import {
-    form, loadingForm, submissionToWorkflowSuccessful, submittingToWorkflow
+    form, loadingForm, submissionToWorkflowSuccessful, submittingToWorkflow, successfulFormValidation
 } from "../selectors";
 import {bindActionCreators} from "redux";
 import * as actions from "../actions";
@@ -24,18 +24,27 @@ class StartForm extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        if (nextProps.submissionToWorkflowSuccessful) {
-            this.props.history.replace("/tasks");
+        if (this.form && this.form.formio.data.submit) {
+            if (nextProps.submissionToWorkflowSuccessful && nextProps.successfulFormValidation) {
+                this.form.formio.emit("submitDone");
+                this.props.history.replace("/home");
+            } else {
+                if (!nextProps.submittingToWorkflow) {
+                    this.form.formio.emit("error");
+                    this.form.formio.emit('change', this.form.formio.submission);
+                }
+            }
         }
     }
 
     componentWillUnmount() {
+        this.form = null;
         this.props.resetForm();
     }
 
 
     renderForm() {
-        const {loadingForm, form, processName, processKey, variableName} = this.props;
+        const {loadingForm, form, processName, processKey, formName} = this.props;
 
         if (loadingForm) {
             return <div>Loading form for {processName} </div>
@@ -45,14 +54,10 @@ class StartForm extends React.Component {
             };
             if (form) {
                 const variableInput = form.components.find(c => c.key === 'submitVariableName');
-                const variableName = variableInput ? variableInput.defaultValue : variableName;
+                const variableName = variableInput ? variableInput.defaultValue : formName;
                 const process = processName ? processName : processKey;
-                return <Form form={form}
-                             ref={(form) => this.form = form}
-                             options={options} onSubmit={(submission) => {
-                    this.props.submit(form._id,
-                        processKey, variableName, submission.data, process);
-                    this.form.formio.emit("submitDone");
+                return <Form form={form} ref={(form) => this.form = form} options={options} onSubmit={(submission) => {
+                    this.props.submit(form._id, processKey, variableName, submission.data, process);
 
                 }}/>
             } else {
@@ -85,7 +90,8 @@ export default connect((state) => {
         form: form(state),
         loadingForm: loadingForm(state),
         submissionToWorkflowSuccessful: submissionToWorkflowSuccessful(state),
-        submittingToWorkflow: submittingToWorkflow(state)
+        submittingToWorkflow: submittingToWorkflow(state),
+        successfulFormValidation: successfulFormValidation(state)
 
     }
 }, mapDispatchToProps)(withRouter(StartForm))
