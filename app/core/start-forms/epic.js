@@ -87,7 +87,7 @@ const submitToWorkflow = (action$, store) =>
                     console.log(JSON.stringify(action));
                     PubSub.publish("submission", {
                         submission: true,
-                        message: `${action.processName} successfully started`
+                        message: `${action.processName} successfully submitted`
                     });
                     return actions.submitToWorkflowSuccess(payload)
                 }).catch(error => {

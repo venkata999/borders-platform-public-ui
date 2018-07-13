@@ -12,11 +12,6 @@ class SubmissionBanner extends React.Component {
                 submission: data.submission,
                 message: data.message
             });
-            setTimeout(() => {
-                this.setState({
-                    submission: false, message: null
-                })
-            }, 5000);
         });
     }
 
