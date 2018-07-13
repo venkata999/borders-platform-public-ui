@@ -8,6 +8,7 @@ import * as actions from "../actions";
 import {withRouter} from "react-router-dom";
 import {connect} from "react-redux";
 import {Form} from 'react-formio';
+import PubSub from "pubsub-js";
 
 class StartForm extends React.Component {
 
@@ -27,7 +28,6 @@ class StartForm extends React.Component {
         if (this.form && this.form.formio.data.submit) {
             if (nextProps.submissionToWorkflowSuccessful && nextProps.successfulFormValidation) {
                 this.form.formio.emit("submitDone");
-                this.props.history.replace("/home");
             } else {
                 if (!nextProps.submittingToWorkflow) {
                     this.form.formio.emit("error");
@@ -57,6 +57,10 @@ class StartForm extends React.Component {
                 const variableName = variableInput ? variableInput.defaultValue : formName;
                 const process = processName ? processName : processKey;
                 return <Form form={form} ref={(form) => this.form = form} options={options} onSubmit={(submission) => {
+                    PubSub.publish("submission", {
+                        submission: false,
+                        message: ''
+                    });
                     this.props.submit(form._id, processKey, variableName, submission.data, process);
 
                 }}/>

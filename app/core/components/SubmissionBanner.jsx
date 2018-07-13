@@ -8,10 +8,12 @@ class SubmissionBanner extends React.Component {
         super();
         this.state = {submission: false, message: null,  visibility: 'hidden'};
         PubSub.subscribe('submission', (msg, data) => {
-            this.setState({
-                submission: data.submission,
-                message: data.message
-            });
+            if (data.submission) {
+                this.setState({
+                    submission: data.submission,
+                    message: data.message
+                });
+            }
         });
     }
 
