@@ -19,6 +19,8 @@ const Main = () => (
             }}/>
             <Redirect to="/home"/>
         </Switch>
+
+
     </main>
 );
 
