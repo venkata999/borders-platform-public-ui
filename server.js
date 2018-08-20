@@ -45,7 +45,7 @@ console.log("workflow name " + process.env.WORKFLOW_NAME);
 console.log("translation name" + process.env.TRANSLATION_SERVICE_NAME);
 
 const workflowName = process.env.WORKFLOW_NAME;
-const platformDataUrl = process.env.PLATFORM_DATA_URL;
+const platformDataName = process.env.PLATFORM_DATA;
 
 const translationServiceName =  process.env.TRANSLATION_SERVICE_NAME;
 const formIOName = process.env.FORM_IO_NAME;
@@ -57,6 +57,7 @@ const domain = process.env.DOMAIN;
 const formIOUrl = `https://${formIOName}.${domain}`;
 const workflowUrl = `https://${workflowName}.${intdomain}`;
 const translationServiceUrl = `https://${translationServiceName}.${intdomain}`;
+const platformDataUrl = `https://${platformDataName}.${intdomain}`;
 
 console.log("formIOUrl " + formIOUrl);
 console.log("workflowUrl " + workflowUrl);
